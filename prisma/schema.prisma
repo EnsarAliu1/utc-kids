@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum LessonType {
+  BLOCKLY
+  HYBRID
+  TEXT
+}
+
+// Llogaritë e të rriturve të menaxhuara nga Clerk Auth
+model User {
+  id             String           @id // Clerk User ID
+  name           String
+  email          String           @unique
+  role           Role             @default(STUDENT)
+  students       StudentProfile[] @relation("TeacherToStudent")
+  studentProfile StudentProfile?  @relation("UserToStudentProfile")
+  classrooms     Classroom[]      @relation("TeacherClassrooms")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+// Llogaritë e thjeshta të fëmijëve (Studentëve) - Autentikim Lokal
+model StudentProfile {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  passwordHash String // Hash-i i fjalëkalimit të thjeshtë ose PIN-it
+  fullName     String
+  age          Int
+  xp           Int       @default(0)
+  streak       Int       @default(0)
+  lastActive   DateTime?
+
+  // Link to Supervisor/Teacher
+  teacherId String?
+  teacher   User?   @relation("TeacherToStudent", fields: [teacherId], references: [id])
+
+  // Optional link to their own Clerk User
+  userId String? @unique
+  user   User?   @relation("UserToStudentProfile", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Classrooms
+  classrooms Classroom[] @relation("ClassroomToStudent")
+
+  progress     Progress[]
+  achievements Achievement[]
+  submissions  Submission[]
+  snapshots    WorkspaceSnapshot[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+}
+
+model Course {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  level       String // E.g., "KIDS_6_9", "KIDS_10_13", "TEENS_14"
+  modules     Module[]
+  classrooms  Classroom[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Classroom {
+  id          String           @id @default(uuid())
+  name        String
+  description String?
+  code        String           @unique // Code kids use to join this classroom
+  teacherId   String
+  teacher     User             @relation("TeacherClassrooms", fields: [teacherId], references: [id], onDelete: Cascade)
+  courseId    String
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  students    StudentProfile[] @relation("ClassroomToStudent")
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Module {
+  id        String   @id @default(uuid())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title     String
+  order     Int
+  lessons   Lesson[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lesson {
+  id         String      @id @default(uuid())
+  moduleId   String
+  module     Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  title      String
+  content    String      @db.Text
+  type       LessonType  @default(BLOCKLY)
+  order      Int
+  challenges Challenge[]
+  progress   Progress[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Challenge {
+  id           String              @id @default(uuid())
+  lessonId     String
+  lesson       Lesson              @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  instructions String              @db.Text
+  solutionCode String              @db.Text // Kodi që duhet të gjenerohet për të kaluar sfidën
+  starterCode  Json? // Struktura e blloqeve fillestare e ruajtur si JSON (jo XML)
+  xpReward     Int                 @default(50)
+  submissions  Submission[]
+  snapshots    WorkspaceSnapshot[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+}
+
+// Version History - Ruan snapshot-et e studentit
+model WorkspaceSnapshot {
+  id               String         @id @default(uuid())
+  challengeId      String
+  challenge        Challenge      @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  studentProfileId String
+  student          StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  workspace        Json // Gjendja e blloqeve si JSON
+  createdAt        DateTime       @default(now())
+}
+
+model Progress {
+  id               String         @id @default(uuid())
+  studentProfileId String
+  student          StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  lessonId         String
+  lesson           Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completed        Boolean        @default(false)
+  failuresCount    Int            @default(0) // Për Lesson Difficulty Analytics
+  rageQuits        Int            @default(0) // Shtohet kur nxënësi del pas shumë gabimeve
+  completedAt      DateTime       @default(now())
+
+  @@unique([studentProfileId, lessonId])
+}
+
+model Achievement {
+  id               String         @id @default(uuid())
+  studentProfileId String
+  student          StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  badgeName        String
+  unlockedAt       DateTime       @default(now())
+}
+
+model Submission {
+  id               String         @id @default(uuid())
+  studentProfileId String
+  student          StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  challengeId      String
+  challenge        Challenge      @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  code             String         @db.Text
+  passed           Boolean
+  createdAt        DateTime       @default(now())
+}
