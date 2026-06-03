@@ -66,6 +66,7 @@ export default function LoginPage() {
         {/* Clerk SignIn with custom appearance */}
         <SignIn
           routing="hash"
+          forceRedirectUrl="/admin"
           appearance={{
             variables: {
               colorPrimary: '#00F59B',

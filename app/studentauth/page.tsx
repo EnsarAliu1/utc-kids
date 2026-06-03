@@ -3,11 +3,12 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLeft, User, Lock, Mail, Eye, EyeOff } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
+import { StudentLoginForm } from '@/components/auth/StudentLoginForm'
+import { StudentRegisterForm } from '@/components/auth/StudentRegisterForm'
 
 export default function StudentAuth() {
   const [tab, setTab] = useState<'login' | 'register'>('login')
-  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col relative overflow-hidden">
@@ -96,78 +97,12 @@ export default function StudentAuth() {
               </button>
             </div>
 
-            <form className="flex flex-col gap-5" onSubmit={e => e.preventDefault()}>
-
-              {/* --- REGISTER ONLY FIELDS --- */}
-              {tab === 'register' && (
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Emri */}
-                  <div className="flex flex-col gap-2">
-                    <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#00F59B] uppercase">
-                      <User className="w-3 h-3" /> Emri
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="p.sh. Arta"
-                      className="bg-[#0a0f0c]/80 border border-zinc-800 hover:border-zinc-700 focus:border-[#00F59B]/50 focus:ring-2 focus:ring-[#00F59B]/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm outline-none transition-all duration-200"
-                    />
-                  </div>
-                  {/* Mbiemri */}
-                  <div className="flex flex-col gap-2">
-                    <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#00F59B] uppercase">
-                      <User className="w-3 h-3" /> Mbiemri
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="p.sh. Berisha"
-                      className="bg-[#0a0f0c]/80 border border-zinc-800 hover:border-zinc-700 focus:border-[#00F59B]/50 focus:ring-2 focus:ring-[#00F59B]/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm outline-none transition-all duration-200"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Username */}
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#00F59B] uppercase">
-                  <Mail className="w-3 h-3" /> Username
-                </label>
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="bg-[#0a0f0c]/80 border border-zinc-800 hover:border-zinc-700 focus:border-[#00F59B]/50 focus:ring-2 focus:ring-[#00F59B]/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm outline-none transition-all duration-200"
-                />
-              </div>
-
-              {/* Password */}
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#00F59B] uppercase">
-                  <Lock className="w-3 h-3" /> Kodi Sekret
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    className="w-full bg-[#0a0f0c]/80 border border-zinc-800 hover:border-zinc-700 focus:border-[#00F59B]/50 focus:ring-2 focus:ring-[#00F59B]/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm outline-none transition-all duration-200 pr-12"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(p => !p)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-[#00F59B] transition-colors duration-200"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="mt-2 w-full h-12 rounded-xl bg-[#00F59B] text-zinc-950 font-bold text-base hover:bg-[#00d888] hover:scale-[1.01] active:scale-95 transition-all duration-200 shadow-lg shadow-[#00F59B]/10 hover:shadow-[#00F59B]/20"
-              >
-                {tab === 'login' ? 'Fillo Aventurën 🚀' : 'Regjistrohu Tani 🎯'}
-              </button>
-
-            </form>
+            {/* Conditionally Render Login or Register Form */}
+            {tab === 'login' ? (
+              <StudentLoginForm />
+            ) : (
+              <StudentRegisterForm onSuccess={() => setTab('login')} />
+            )}
 
             {/* Switch tab link */}
             <div className="mt-6 text-center">

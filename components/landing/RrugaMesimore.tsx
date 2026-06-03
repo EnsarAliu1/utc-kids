@@ -8,28 +8,32 @@ function RrugaMesimore() {
       title: "Blockly Logic",
       description: "Bazat e programimit përmes blloqeve vizuale.",
       type: "number",
-      value: "1"
+      value: "1",
+      icon: null
     },
     {
       id: 2,
       title: "Python Basics",
       description: "Kalimi në sintaksën e vërtetë me gjuhën Python.",
       type: "number",
-      value: "2"
+      value: "2",
+      icon: null
     },
     {
       id: 3,
       title: "Web Studio",
       description: "Krijimi i uebfaqeve të para me HTML/CSS.",
       type: "number",
-      value: "3"
+      value: "3",
+      icon: null
     },
     {
       id: 4,
       title: "Pro React",
       description: "Aplikacione moderne me React dhe Next.js.",
       type: "icon",
-      value: Rocket
+      value: "",
+      icon: Rocket
     }
   ];
 
@@ -68,7 +72,7 @@ function RrugaMesimore() {
           {/* Steps Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-6">
             {steps.map((step, idx) => {
-              const Icon = step.value;
+              const Icon = step.icon;
               return (
                 <div 
                   key={idx} 
@@ -83,7 +87,7 @@ function RrugaMesimore() {
                       </div>
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800/85 text-[#00F59B] flex items-center justify-center shadow-lg shadow-black/40 group-hover:scale-110 group-hover:border-zinc-700 transition-all duration-300">
-                        <Icon className="w-5 h-5" />
+                        {Icon && <Icon className="w-5 h-5" />}
                       </div>
                     )}
                   </div>

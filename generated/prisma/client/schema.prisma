@@ -42,7 +42,7 @@ model User {
 model StudentProfile {
   id           String    @id @default(uuid())
   username     String    @unique
-  passwordHash String    // Hash-i i fjalëkalimit të thjeshtë ose PIN-it
+  passwordHash String // Hash-i i fjalëkalimit të thjeshtë ose PIN-it
   fullName     String
   age          Int?      @default(0) // Optional — teacher updates later
   level        Int       @default(1) // Current learning level (1=Blockly, 2=Hybrid, etc.)
@@ -162,8 +162,8 @@ model Achievement {
   id               String         @id @default(uuid())
   studentProfileId String
   student          StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
-  badgeName        String         // e.g. "first_challenge", "streak_3", "level_2"
-  title            String         // Human-readable: "Hapat e Parë"
+  badgeName        String // e.g. "first_challenge", "streak_3", "level_2"
+  title            String // Human-readable: "Hapat e Parë"
   emoji            String         @default("🏆") // Badge emoji
   xpAwarded        Int            @default(0)
   unlockedAt       DateTime       @default(now())
