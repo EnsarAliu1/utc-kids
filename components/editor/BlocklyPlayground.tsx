@@ -26,71 +26,42 @@ import Link from "next/link";
 import { awardXP, saveWorkspaceSnapshot, type AwardXPResult } from "@/lib/actions/xp.actions";
 
 
-// ─── Challenge Visual Meta Map ────────────────────────────────────────────────
-const CHALLENGE_META: Record<string, { name: string; emoji: string; description: string }> = {
-  sfida_html_1: {
-    name: "Titulli Kozmik",
-    emoji: "🪐",
-    description: "Krijo një faqe që përmban një titull kryesor <h1> me tekstin saktësisht 'Përshëndetje Botë!' brenda bllokut Trup të faqes.",
-  },
-  sfida_html_2: {
-    name: "Art me Foto",
-    emoji: "🖼️",
-    description: "Ndërto një faqe me Titull Kozmik (h1), Shkrim Magjik (p) me tekstin 'Unë po mësoj kodim!' dhe një bllok Foto-Galaktike.",
-  },
-  sfida_html_3: {
-    name: "Butoni i Lansimit",
-    emoji: "🔘",
-    description: "Krijo një Buton Lansimi të gjelbër me tekstin 'Kliko Këtu' dhe një Portal Teleportimi (link) me tekstin 'UTC Kids' që çon te 'https://utckids.com'.",
-  },
-  sfida_html_4: {
-    name: "Lista e Misioneve",
-    emoji: "📋",
-    description: "Krijo një listë <ul> me dy elemente <li> që përmbajnë tekstet 'Udhëto në Mars' dhe 'Fluturo në Hënë'.",
-  },
+// Dynamic challenge code validator using database solutions
+const validateChallenge = (code: string, solution: string) => {
+  const normalizedCode = code.toLowerCase().replace(/\s+/g, "");
+  const normalizedSolution = solution.toLowerCase().replace(/\s+/g, "");
+
+  if (normalizedSolution === "<img>" || normalizedSolution === "img") {
+    if (!normalizedCode.includes("<img")) {
+      return { passed: false, errorMsg: "Mungon blloku i Fotos (img) në faqen tuaj." };
+    }
+    return { passed: true };
+  }
+  if (normalizedSolution === "<a>" || normalizedSolution === "a") {
+    if (!normalizedCode.includes("<a")) {
+      return { passed: false, errorMsg: "Mungon blloku i Linkut (a) në faqen tuaj." };
+    }
+    return { passed: true };
+  }
+  if (normalizedSolution === "<ul>" || normalizedSolution === "ul") {
+    if (!normalizedCode.includes("<ul")) {
+      return { passed: false, errorMsg: "Mungon blloku i Listës (ul) në faqen tuaj." };
+    }
+    return { passed: true };
+  }
+
+  // Substring checker for custom strings or tags
+  if (!normalizedCode.includes(normalizedSolution)) {
+    const displaySolution = solution.replace(/<[^>]*>?/gm, '');
+    return {
+      passed: false,
+      errorMsg: `Kodi i gjeneruar nuk përmban elementin ose tekstin e kërkuar: "${displaySolution || solution}"`
+    };
+  }
+
+  return { passed: true };
 };
 
-const getChallengeMeta = (chId: string, instructions: string) => {
-  return CHALLENGE_META[chId] || {
-    name: "Mision Kozmik",
-    emoji: "🚀",
-    description: instructions,
-  };
-};
-
-// ─── Challenge Code Validators ────────────────────────────────────────────────
-const CHALLENGE_VALIDATORS: Record<string, (code: string) => { passed: boolean; errorMsg?: string }> = {
-  sfida_html_1: (code) => {
-    if (!code.includes("<body") || !code.includes("</body>"))
-      return { passed: false, errorMsg: "Mungon blloku 'Kapsula e Ndërtimit (body)' në workspace." };
-    if (!code.includes("<h1>Përshëndetje Botë!</h1>"))
-      return { passed: false, errorMsg: "Mungon Titulli Kozmik <h1> ose teksti nuk është saktësisht 'Përshëndetje Botë!'." };
-    return { passed: true };
-  },
-  sfida_html_2: (code) => {
-    if (!code.includes("<h1") || !code.includes("</h1>"))
-      return { passed: false, errorMsg: "Faqja duhet të përmbajë një Titull Kozmik <h1>." };
-    if (!code.includes("<p>Unë po mësoj kodim!</p>"))
-      return { passed: false, errorMsg: "Mungon Shkrimi Magjik <p> ose teksti nuk është saktësisht 'Unë po mësoj kodim!'." };
-    if (!code.includes("<img"))
-      return { passed: false, errorMsg: "Mungon blloku Foto-Galaktike (img)." };
-    return { passed: true };
-  },
-  sfida_html_3: (code) => {
-    if (!code.includes("background-color: #10B981;") || !code.includes("Kliko Këtu"))
-      return { passed: false, errorMsg: "Mungon Butoni i Lansimit ose ngjyra e gjelbër apo teksti 'Kliko Këtu'." };
-    if (!code.includes('href="https://utckids.com"') || !code.includes("UTC Kids"))
-      return { passed: false, errorMsg: "Mungon Portali i Teleportimit (<a>), teksti 'UTC Kids' ose adresa 'https://utckids.com'." };
-    return { passed: true };
-  },
-  sfida_html_4: (code) => {
-    if (!code.includes("<ul>") || !code.includes("</ul>"))
-      return { passed: false, errorMsg: "Mungon blloku i Listës së Misioneve (ul)." };
-    if (!code.includes("<li>Udhëto në Mars</li>") || !code.includes("<li>Fluturo në Hënë</li>"))
-      return { passed: false, errorMsg: "Mungon një nga elementet e listës ose teksti i elementeve nuk është saktësisht 'Udhëto në Mars' dhe 'Fluturo në Hënë'." };
-    return { passed: true };
-  },
-};
 
 const DEFAULT_CSS = `    body{font-family:system-ui,-apple-system,sans-serif;padding:32px;background:#0f172a;color:#f1f5f9;text-align:center;}
     h1{color:#38bdf8;font-size:2.2rem;margin-bottom:16px;text-shadow:0 0 10px rgba(56,189,248,0.2);}
@@ -422,12 +393,24 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
   const [student, setStudent] = useState<StudentData>(initialStudent);
   const [completedIds, setCompletedIds] = useState<string[]>(initialCompletedIds);
 
+  // Ndërtojmë listën dinamike të hapur (rishikohet pas çdo plotësimi)
+  const computeUnlockedIds = (completedList: string[]): Set<string> => {
+    const flat = modules.flatMap((m) =>
+      m.lessons.flatMap((l) => l.challenges.map((c) => ({ ...c })))
+    );
+    const firstUnc = flat.findIndex((c) => !completedList.includes(c.id));
+    return new Set(
+      flat.filter((_, i) => firstUnc === -1 ? true : i <= firstUnc).map((c) => c.id)
+    );
+  };
+  const [unlockedIds, setUnlockedIds] = useState<Set<string>>(() => computeUnlockedIds(initialCompletedIds));
+
   // Blockly state
   const [generatedCode, setGeneratedCode] = useState("");
   const [status, setStatus] = useState<"idle" | "running" | "success" | "missed">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [xpResult, setXpResult] = useState<AwardXPResult | null>(null);
-  const [previewExpanded, setPreviewExpanded] = useState(false);
+
 
   // Active curriculum objects
   const activeLesson = modules
@@ -436,7 +419,6 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
   const challenges = activeLesson?.challenges || [];
   const challenge = challenges[activeChallengeIdx] || null;
 
-  const challengeMeta = challenge ? getChallengeMeta(challenge.id, challenge.instructions) : null;
 
   // Kalimi i sfidës me ruajtje automatike të gjendjes paraprake
   const changeChallenge = async (newLessonId: string, newChallengeIdx: number) => {
@@ -625,20 +607,19 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
 
     await new Promise((r) => setTimeout(r, 850));
 
-    // Get the validator
-    const validator = CHALLENGE_VALIDATORS[challenge.id];
-    const result = validator
-      ? validator(generatedCode)
-      : challenge.solutionCode && !generatedCode.toLowerCase().includes(challenge.solutionCode.toLowerCase())
-      ? { passed: false, errorMsg: `Kodi juaj duhet të përmbajë: ${challenge.solutionCode}` }
-      : { passed: true };
+    // Dynamic database-driven validator
+    const result = validateChallenge(generatedCode, challenge.solutionCode);
+
 
     if (result.passed) {
       setStatus("success");
       const res = await awardXP(challenge.xpReward, challenge.id);
       setXpResult(res);
       if (res.success) {
-        setCompletedIds((prev) => [...new Set([...prev, challenge.id])]);
+        const newCompleted = [...new Set([...completedIds, challenge.id])];
+        setCompletedIds(newCompleted);
+        // Rifreskojmë listën e hapur pas plotësimit të sfidës
+        setUnlockedIds(computeUnlockedIds(newCompleted));
         // Instantly increment client state for rapid feedback
         setStudent((prev) => ({
           ...prev,
@@ -738,23 +719,32 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
                     const solvedChallenges = les.challenges.filter((c: any) => completedIds.includes(c.id)).length;
                     const totalChallenges = les.challenges.length;
                     const isDone = totalChallenges > 0 && solvedChallenges === totalChallenges;
+                    // Leksioni është i hapur vetëm nëse ka sfida të hapura
+                    const lessonUnlocked = les.challenges.some((c: any) => unlockedIds.has(c.id));
+                    // Sfida e parë e pakryer e këtij leksioni
+                    const firstUncompletedIdx = les.challenges.findIndex((c: any) => !completedIds.includes(c.id));
+                    const entryIdx = firstUncompletedIdx >= 0 ? firstUncompletedIdx : 0;
 
                     return (
                       <button
                         key={les.id}
                         onClick={() => {
-                          changeChallenge(les.id, 0);
+                          if (!lessonUnlocked) return; // BLLOKIM
+                          changeChallenge(les.id, entryIdx);
                         }}
+                        disabled={!lessonUnlocked}
                         className={`w-full text-left p-3 rounded-xl transition-all duration-300 border flex flex-col gap-1.5 relative group
                           ${
-                            isSelected
+                            !lessonUnlocked
+                              ? "opacity-40 cursor-not-allowed border-transparent bg-transparent"
+                              : isSelected
                               ? "bg-[#00F59B]/10 border-[#00F59B]/30 shadow-md shadow-[#00F59B]/5 text-white"
                               : "bg-transparent border-transparent hover:bg-white/5 text-zinc-400 hover:text-white"
                           }`}
                       >
                         <div className="flex items-center gap-2.5">
                           <span className="text-base flex-shrink-0">
-                            {isDone ? "✅" : isSelected ? "🛰️" : "📁"}
+                            {!lessonUnlocked ? "🔒" : isDone ? "✅" : isSelected ? "🛰️" : "📁"}
                           </span>
                           <span className="text-xs font-bold truncate flex-1">
                             {les.title}
@@ -762,15 +752,15 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
                         </div>
                         <div className="flex justify-between items-center pl-6">
                           <span className="text-[10px] text-zinc-500 font-semibold">
-                            {solvedChallenges}/{totalChallenges} Sfida
+                            {lessonUnlocked ? `${solvedChallenges}/${totalChallenges} Sfida` : "E bllokuar"}
                           </span>
-                          {totalChallenges > 0 && (
+                          {lessonUnlocked && totalChallenges > 0 && (
                             <div className="flex gap-0.5">
                               {les.challenges.map((c: any) => (
                                 <span
                                   key={c.id}
                                   className={`w-1.5 h-1.5 rounded-full ${
-                                    completedIds.includes(c.id) ? "bg-[#00F59B]" : "bg-zinc-800"
+                                    completedIds.includes(c.id) ? "bg-[#00F59B]" : unlockedIds.has(c.id) ? "bg-zinc-600" : "bg-zinc-900"
                                   }`}
                                 />
                               ))}
@@ -800,23 +790,29 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
                   {challenges.map((ch, idx) => {
                     const isActive = idx === activeChallengeIdx;
                     const isCompleted = completedIds.includes(ch.id);
+                    const isChallengeUnlocked = unlockedIds.has(ch.id);
                     return (
                       <button
                         key={ch.id}
+                        disabled={!isChallengeUnlocked}
                         onClick={() => {
+                          if (!isChallengeUnlocked) return; // BLLOKIM
                           changeChallenge(activeLessonId, idx);
                         }}
+                        title={!isChallengeUnlocked ? "Përfundo sfidat e mëparshme për ta zhbllokuar" : undefined}
                         className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 border
                           ${
-                            isActive
+                            !isChallengeUnlocked
+                              ? "opacity-30 cursor-not-allowed bg-zinc-950 border-zinc-900 text-zinc-600"
+                              : isActive
                               ? "bg-[#00F59B]/10 border-[#00F59B]/30 text-[#00F59B]"
                               : isCompleted
                               ? "bg-emerald-950/20 border-emerald-900/30 text-emerald-400 hover:bg-emerald-950/40"
                               : "bg-zinc-900/50 border-zinc-800/50 text-zinc-400 hover:bg-zinc-900 hover:text-white"
                           }`}
                       >
-                        {isCompleted ? <Check className="w-3 h-3" /> : null}
-                        Sfida {idx + 1}
+                        {!isChallengeUnlocked ? "🔒" : isCompleted ? <Check className="w-3 h-3" /> : null}
+                        {isChallengeUnlocked ? `Sfida ${idx + 1}` : `${idx + 1}`}
                       </button>
                     );
                   })}
@@ -832,11 +828,12 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-white flex items-center gap-1">
-                    {challengeMeta?.emoji} Misioni: {challengeMeta?.name}
+                    🚀 Misioni {activeChallengeIdx + 1}
                   </h4>
                   <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                    {challengeMeta?.description}
+                    {challenge.instructions}
                   </p>
+
                 </div>
               </div>
             </div>
@@ -848,27 +845,19 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
         </main>
 
         {/* ── Right Panel: Live View & Runs ────────────────────────────────── */}
-        <aside className="w-96 flex-shrink-0 border-l border-white/5 bg-[#060b08] flex flex-col overflow-hidden min-h-0">
-          {/* Live Preview Console */}
-          <div className={`flex flex-col border-b border-white/5 transition-all duration-300 flex-shrink-0 ${previewExpanded ? "flex-1" : ""}`}>
-            <div className="flex items-center justify-between px-4 py-2.5 bg-[#070d09]">
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-                </div>
-                <span className="text-[10px] font-semibold text-zinc-500">Foto e Gjallë (Live Preview)</span>
+        <aside className="w-80 flex-shrink-0 border-l border-white/5 bg-[#060b08] flex flex-col overflow-hidden min-h-0">
+          {/* Live Preview Console - takes full height above run controls */}
+          <div className="flex-1 flex flex-col min-h-0">
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-[#070d09] border-b border-white/5">
+              <div className="flex gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
               </div>
-              <button
-                onClick={() => setPreviewExpanded((p) => !p)}
-                className="text-zinc-500 hover:text-zinc-300 transition-colors"
-              >
-                <Maximize2 className="w-3.5 h-3.5" />
-              </button>
+              <span className="text-[10px] font-semibold text-zinc-500">Foto e Gjallë (Live Preview)</span>
             </div>
 
-            <div className={`w-full bg-white relative ${previewExpanded ? "flex-1" : "h-[250px]"}`}>
+            <div className="flex-1 bg-white relative">
               <iframe
                 title="Live Preview"
                 srcDoc={
@@ -881,16 +870,6 @@ export default function BlocklyPlayground({ initialStudent, modules, initialComp
             </div>
           </div>
 
-          {/* Generated HTML Code View */}
-          <div className="flex flex-col border-b border-white/5 flex-1 min-h-0">
-            <div className="flex items-center gap-2 px-4 py-2 bg-[#070d09]">
-              <FileCode className="w-3.5 h-3.5 text-[#00F59B]" />
-              <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">Kodi i Gjeneruar</span>
-            </div>
-            <div className="flex-1 overflow-auto p-3 font-mono text-[11px] text-[#00F59B] bg-[#040807] leading-relaxed">
-              <pre className="whitespace-pre-wrap">{generatedCode || "<!-- Vendos blloqe për të parë kodin... -->"}</pre>
-            </div>
-          </div>
 
           {/* Run and Validation Feedback Panel */}
           <div className="p-4 bg-[#0a0f0c] border-t border-white/5 flex-shrink-0">
