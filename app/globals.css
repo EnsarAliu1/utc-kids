@@ -189,3 +189,86 @@
     @apply font-sans;
   }
 }
+
+/* ── Blockly Custom Theme Styling ────────────────────────────────────────── */
+.blocklySvg {
+  background-color: transparent !important;
+}
+
+.blocklyMainBackground {
+  stroke: none !important;
+  fill: #080e0b !important;
+}
+
+.blocklyToolboxDiv {
+  background-color: #050a07 !important;
+  border-right: 1px solid rgba(0, 245, 155, 0.08) !important;
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.5) !important;
+  padding: 10px 0 !important;
+}
+
+.blocklyFlyoutBackground {
+  fill: #050a07 !important;
+  fill-opacity: 0.98 !important;
+}
+
+.blocklyFlyoutLabelText {
+  fill: #94a3b8 !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+}
+
+.blocklyText, .blocklyFlyoutLabelText {
+  font-family: var(--font-sans) !important;
+}
+
+.blocklyHtmlInput {
+  background-color: #0b120f !important;
+  border: 1px solid rgba(0, 245, 155, 0.2) !important;
+  color: #00F59B !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+  font-family: var(--font-sans) !important;
+  font-weight: bold !important;
+}
+
+.blocklyTreeLabel {
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: #94a3b8 !important;
+}
+
+.blocklyTreeRow.blocklyTreeSelected .blocklyTreeLabel {
+  color: #00F59B !important;
+}
+
+/* Beautiful custom style for Zelos blocks */
+.blocklyPath {
+  stroke: rgba(255, 255, 255, 0.1) !important;
+  stroke-width: 1px !important;
+}
+
+.blocklyBlockDragSurface {
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5)) !important;
+}
+
+.blocklyScrollbarHandle {
+  fill: #00F59B !important;
+  fill-opacity: 0.15 !important;
+  rx: 4px !important;
+}
+
+.blocklyScrollbarHandle:hover {
+  fill-opacity: 0.35 !important;
+}
+
+/* Trashcan hover effect */
+.blocklyTrash {
+  transition: transform 0.2s ease-in-out !important;
+}
+.blocklyTrash:hover {
+  transform: scale(1.1) !important;
+}

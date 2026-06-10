@@ -52,7 +52,7 @@ model StudentProfile {
   lastActive   DateTime?
 
   teacherId String?
-  teacher   User?   @relation("TeacherToStudent", fields: [teacherId], references: [id])
+  teacher   User?   @relation("TeacherToStudent", fields: [teacherId], references: [id], onDelete: SetNull)
 
   userId String? @unique
   user   User?   @relation("UserToStudentProfile", fields: [userId], references: [id], onDelete: Cascade)

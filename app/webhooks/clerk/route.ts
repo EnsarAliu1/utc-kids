@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
   let evt: WebhookEvent;
   try {
-    evt = new Webhook(secret).verify(rawBody, {
+    evt = new Webhook(secret.trim()).verify(rawBody, {
       "svix-id": svixId,
       "svix-timestamp": svixTimestamp,
       "svix-signature": svixSignature,

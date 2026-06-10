@@ -9,6 +9,25 @@ const BlocklyPlayground = dynamic(
   { ssr: false }
 );
 
-export default function EditorClientWrapper() {
-  return <BlocklyPlayground />;
+interface Props {
+  student: {
+    fullName: string;
+    level: number;
+    xp: number;
+  };
+  modules: any[];
+  completedIds: string[];
+  initialSnapshots: Record<string, any>;
 }
+
+export default function EditorClientWrapper({ student, modules, completedIds, initialSnapshots }: Props) {
+  return (
+    <BlocklyPlayground
+      initialStudent={student}
+      modules={modules}
+      initialCompletedIds={completedIds}
+      initialSnapshots={initialSnapshots}
+    />
+  );
+}
+

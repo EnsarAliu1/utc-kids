@@ -213,3 +213,45 @@ export async function resetStudentProgress() {
   }
 }
 
+/**
+ * Saves a student's Blockly workspace snapshot for a specific challenge.
+ */
+export async function saveWorkspaceSnapshot(challengeId: string, workspaceJson: any) {
+  try {
+    const session = await getStudentSession();
+    if (!session.studentId) {
+      return { success: false, error: "Nuk jeni i identifikuar." };
+    }
+
+    const studentId = session.studentId;
+
+    const existing = await prisma.workspaceSnapshot.findFirst({
+      where: {
+        studentProfileId: studentId,
+        challengeId: challengeId,
+      },
+    });
+
+    if (existing) {
+      await prisma.workspaceSnapshot.update({
+        where: { id: existing.id },
+        data: { workspace: workspaceJson },
+      });
+    } else {
+      await prisma.workspaceSnapshot.create({
+        data: {
+          studentProfileId: studentId,
+          challengeId: challengeId,
+          workspace: workspaceJson,
+        },
+      });
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Gabim gjatë ruajtjes së workspace snapshot:", err);
+    return { success: false, error: err.message || "Ndodhi një gabim në server." };
+  }
+}
+
+
