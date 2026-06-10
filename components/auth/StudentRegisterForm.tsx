@@ -70,6 +70,21 @@ export function StudentRegisterForm({ onSuccess }: { onSuccess?: () => void }) {
         />
       </div>
 
+      {/* Mosha */}
+      <div className="flex flex-col gap-2">
+        <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#00F59B] uppercase">
+          <User className="w-3 h-3" /> Mosha
+        </label>
+        <input
+          name="age"
+          type="number"
+          min="4"
+          max="18"
+          placeholder="p.sh. 10"
+          className="bg-[#0a0f0c]/80 border border-zinc-800 hover:border-zinc-700 focus:border-[#00F59B]/50 focus:ring-2 focus:ring-[#00F59B]/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm outline-none transition-all duration-200"
+        />
+      </div>
+
       {/* Password */}
       <div className="flex flex-col gap-2">
         <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#00F59B] uppercase">

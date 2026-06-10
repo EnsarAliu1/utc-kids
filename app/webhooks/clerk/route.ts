@@ -2,94 +2,79 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { Role } from "@/generated/prisma/client";
 import { NextResponse } from "next/server";
 
+function resolveRole(email: string): Role {
+  return email === process.env.ADMIN_EMAIL ? Role.ADMIN : Role.TEACHER;
+}
+
 export async function POST(req: Request) {
-  // Get the headers
+  const secret = process.env.CLERK_WEBHOOK_SECRET;
+  if (!secret) {
+    console.error("CLERK_WEBHOOK_SECRET mungon në .env");
+    return new Response("Server misconfigured", { status: 500 });
+  }
+
   const headerPayload = await headers();
-  const svix_id = headerPayload.get("svix-id");
-  const svix_timestamp = headerPayload.get("svix-timestamp");
-  const svix_signature = headerPayload.get("svix-signature");
+  const svixId = headerPayload.get("svix-id");
+  const svixTimestamp = headerPayload.get("svix-timestamp");
+  const svixSignature = headerPayload.get("svix-signature");
 
-  // If there are no headers, error out
-  if (!svix_id || !svix_timestamp || !svix_signature) {
-    console.error("Mungojnë header-at e svix.");
-    return new Response("Error occurred -- no svix headers", {
-      status: 400,
-    });
+  if (!svixId || !svixTimestamp || !svixSignature) {
+    return new Response("Missing svix headers", { status: 400 });
   }
 
-  // Get the body
-  let payload: any;
+  // Raw body është i domosdoshëm për verifikimin e nënshkrimit nga svix
+  const rawBody = await req.text();
+
+  let evt: WebhookEvent;
   try {
-    payload = await req.json();
+    evt = new Webhook(secret).verify(rawBody, {
+      "svix-id": svixId,
+      "svix-timestamp": svixTimestamp,
+      "svix-signature": svixSignature,
+    }) as WebhookEvent;
   } catch (err) {
-    console.error("Gabim gjatë parse të JSON-it të body:", err);
-    return new Response("Invalid JSON", { status: 400 });
-  }
-  const body = JSON.stringify(payload);
-
-  const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
-
-  if (!webhookSecret) {
-    console.warn("CLERK_WEBHOOK_SECRET nuk është i vendosur në .env. Duke anashkaluar verifikimin e nënshkrimit për qëllime testimi.");
-  } else {
-    // Verifiko nënshkrimin me svix
-    const wh = new Webhook(webhookSecret);
-    try {
-      wh.verify(body, {
-        "svix-id": svix_id,
-        "svix-timestamp": svix_timestamp,
-        "svix-signature": svix_signature,
-      });
-    } catch (err) {
-      console.error("Gabim në verifikimin e nënshkrimit nga Clerk:", err);
-      return new Response("Error occurred -- signature verification failed", {
-        status: 400,
-      });
-    }
+    console.error("Verifikimi i webhook-ut dështoi:", err);
+    return new Response("Invalid signature", { status: 400 });
   }
 
-  // Pasi verifikimi kalon ose anashkalohet në dev:
-  const evt = payload as WebhookEvent;
-  const eventType = evt.type;
-  console.log(`Clerk Webhook thirrur me event: ${eventType}`);
+  const { type: eventType, data } = evt;
+  console.log(`[Clerk Webhook] ${eventType}`);
 
-  if (eventType === "user.created" || eventType === "user.updated") {
-    const { id, email_addresses, first_name, last_name } = evt.data;
+  switch (eventType) {
+    case "user.created":
+    case "user.updated": {
+      const email = data.email_addresses?.[0]?.email_address;
+      if (!email) return new Response("Missing email", { status: 400 });
 
-    if (!id) {
-      return new Response("Mungon ID e përdoruesit", { status: 400 });
-    }
+      const name =
+        [data.first_name, data.last_name].filter(Boolean).join(" ") ||
+        "Përdorues UTC Kids";
 
-    const email = email_addresses && email_addresses[0]?.email_address;
-    if (!email) {
-      return new Response("Mungon emaili i përdoruesit", { status: 400 });
-    }
+      const role = resolveRole(email);
 
-    const name = [first_name, last_name].filter(Boolean).join(" ") || "Përdorues i UTC Kids";
-
-    try {
       await prisma.user.upsert({
-        where: { id: id },
-        update: {
-          clerkId: id,
-          name: name,
-          email: email,
-        },
-        create: {
-          id: id,
-          clerkId: id,
-          name: name,
-          email: email,
-          role: "STUDENT", // default role
-        },
+        where: { id: data.id },
+        update: { clerkId: data.id, name, email, role },
+        create: { id: data.id, clerkId: data.id, name, email, role },
       });
-      console.log(`Përdoruesi me ID ${id} u përditësua/krijua në databazë me sukses.`);
-    } catch (dbErr) {
-      console.error("Gabim gjatë sinkronizimit të përdoruesit në DB:", dbErr);
-      return new Response("Database error during user upsert", { status: 500 });
+
+      console.log(`[Clerk Webhook] User upserted: ${data.id}`);
+      break;
     }
+
+    case "user.deleted": {
+      if (data.id) {
+        await prisma.user.deleteMany({ where: { id: data.id } });
+        console.log(`[Clerk Webhook] User deleted: ${data.id}`);
+      }
+      break;
+    }
+
+    default:
+      console.log(`[Clerk Webhook] Event i patrajtuar: ${eventType}`);
   }
 
   return NextResponse.json({ success: true });

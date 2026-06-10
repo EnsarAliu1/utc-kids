@@ -41,24 +41,22 @@ model User {
 // Llogaritë e thjeshta të fëmijëve (Studentëve) - Autentikim Lokal
 model StudentProfile {
   id           String    @id @default(uuid())
+  clerkId      String?   @unique // Clerk User ID nëse studenti ka llogari Clerk
   username     String    @unique
-  passwordHash String // Hash-i i fjalëkalimit të thjeshtë ose PIN-it
+  passwordHash String
   fullName     String
-  age          Int?      @default(0) // Optional — teacher updates later
-  level        Int       @default(1) // Current learning level (1=Blockly, 2=Hybrid, etc.)
-  xp           Int       @default(0) // Total experience points
-  streak       Int       @default(0) // Consecutive days active
+  age          Int       @default(0) // Plotësohet nga mësuesi
+  level        Int       @default(1)
+  xp           Int       @default(0)
+  streak       Int       @default(0)
   lastActive   DateTime?
 
-  // Link to Supervisor/Teacher
   teacherId String?
   teacher   User?   @relation("TeacherToStudent", fields: [teacherId], references: [id])
 
-  // Optional link to their own Clerk User
   userId String? @unique
   user   User?   @relation("UserToStudentProfile", fields: [userId], references: [id], onDelete: Cascade)
 
-  // Classrooms
   classrooms Classroom[] @relation("ClassroomToStudent")
 
   progress     Progress[]

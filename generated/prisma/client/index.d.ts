@@ -3275,6 +3275,7 @@ export namespace Prisma {
 
   export type StudentProfileMinAggregateOutputType = {
     id: string | null
+    clerkId: string | null
     username: string | null
     passwordHash: string | null
     fullName: string | null
@@ -3291,6 +3292,7 @@ export namespace Prisma {
 
   export type StudentProfileMaxAggregateOutputType = {
     id: string | null
+    clerkId: string | null
     username: string | null
     passwordHash: string | null
     fullName: string | null
@@ -3307,6 +3309,7 @@ export namespace Prisma {
 
   export type StudentProfileCountAggregateOutputType = {
     id: number
+    clerkId: number
     username: number
     passwordHash: number
     fullName: number
@@ -3339,6 +3342,7 @@ export namespace Prisma {
 
   export type StudentProfileMinAggregateInputType = {
     id?: true
+    clerkId?: true
     username?: true
     passwordHash?: true
     fullName?: true
@@ -3355,6 +3359,7 @@ export namespace Prisma {
 
   export type StudentProfileMaxAggregateInputType = {
     id?: true
+    clerkId?: true
     username?: true
     passwordHash?: true
     fullName?: true
@@ -3371,6 +3376,7 @@ export namespace Prisma {
 
   export type StudentProfileCountAggregateInputType = {
     id?: true
+    clerkId?: true
     username?: true
     passwordHash?: true
     fullName?: true
@@ -3474,10 +3480,11 @@ export namespace Prisma {
 
   export type StudentProfileGroupByOutputType = {
     id: string
+    clerkId: string | null
     username: string
     passwordHash: string
     fullName: string
-    age: number | null
+    age: number
     level: number
     xp: number
     streak: number
@@ -3509,6 +3516,7 @@ export namespace Prisma {
 
   export type StudentProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    clerkId?: boolean
     username?: boolean
     passwordHash?: boolean
     fullName?: boolean
@@ -3533,6 +3541,7 @@ export namespace Prisma {
 
   export type StudentProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    clerkId?: boolean
     username?: boolean
     passwordHash?: boolean
     fullName?: boolean
@@ -3551,6 +3560,7 @@ export namespace Prisma {
 
   export type StudentProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    clerkId?: boolean
     username?: boolean
     passwordHash?: boolean
     fullName?: boolean
@@ -3569,6 +3579,7 @@ export namespace Prisma {
 
   export type StudentProfileSelectScalar = {
     id?: boolean
+    clerkId?: boolean
     username?: boolean
     passwordHash?: boolean
     fullName?: boolean
@@ -3583,7 +3594,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "passwordHash" | "fullName" | "age" | "level" | "xp" | "streak" | "lastActive" | "teacherId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
+  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkId" | "username" | "passwordHash" | "fullName" | "age" | "level" | "xp" | "streak" | "lastActive" | "teacherId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
   export type StudentProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     teacher?: boolean | StudentProfile$teacherArgs<ExtArgs>
     user?: boolean | StudentProfile$userArgs<ExtArgs>
@@ -3616,10 +3627,11 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      clerkId: string | null
       username: string
       passwordHash: string
       fullName: string
-      age: number | null
+      age: number
       level: number
       xp: number
       streak: number
@@ -4059,6 +4071,7 @@ export namespace Prisma {
    */
   interface StudentProfileFieldRefs {
     readonly id: FieldRef<"StudentProfile", 'String'>
+    readonly clerkId: FieldRef<"StudentProfile", 'String'>
     readonly username: FieldRef<"StudentProfile", 'String'>
     readonly passwordHash: FieldRef<"StudentProfile", 'String'>
     readonly fullName: FieldRef<"StudentProfile", 'String'>
@@ -14866,6 +14879,7 @@ export namespace Prisma {
 
   export const StudentProfileScalarFieldEnum: {
     id: 'id',
+    clerkId: 'clerkId',
     username: 'username',
     passwordHash: 'passwordHash',
     fullName: 'fullName',
@@ -15235,10 +15249,11 @@ export namespace Prisma {
     OR?: StudentProfileWhereInput[]
     NOT?: StudentProfileWhereInput | StudentProfileWhereInput[]
     id?: StringFilter<"StudentProfile"> | string
+    clerkId?: StringNullableFilter<"StudentProfile"> | string | null
     username?: StringFilter<"StudentProfile"> | string
     passwordHash?: StringFilter<"StudentProfile"> | string
     fullName?: StringFilter<"StudentProfile"> | string
-    age?: IntNullableFilter<"StudentProfile"> | number | null
+    age?: IntFilter<"StudentProfile"> | number
     level?: IntFilter<"StudentProfile"> | number
     xp?: IntFilter<"StudentProfile"> | number
     streak?: IntFilter<"StudentProfile"> | number
@@ -15258,10 +15273,11 @@ export namespace Prisma {
 
   export type StudentProfileOrderByWithRelationInput = {
     id?: SortOrder
+    clerkId?: SortOrderInput | SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     fullName?: SortOrder
-    age?: SortOrderInput | SortOrder
+    age?: SortOrder
     level?: SortOrder
     xp?: SortOrder
     streak?: SortOrder
@@ -15281,6 +15297,7 @@ export namespace Prisma {
 
   export type StudentProfileWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    clerkId?: string
     username?: string
     userId?: string
     AND?: StudentProfileWhereInput | StudentProfileWhereInput[]
@@ -15288,7 +15305,7 @@ export namespace Prisma {
     NOT?: StudentProfileWhereInput | StudentProfileWhereInput[]
     passwordHash?: StringFilter<"StudentProfile"> | string
     fullName?: StringFilter<"StudentProfile"> | string
-    age?: IntNullableFilter<"StudentProfile"> | number | null
+    age?: IntFilter<"StudentProfile"> | number
     level?: IntFilter<"StudentProfile"> | number
     xp?: IntFilter<"StudentProfile"> | number
     streak?: IntFilter<"StudentProfile"> | number
@@ -15303,14 +15320,15 @@ export namespace Prisma {
     achievements?: AchievementListRelationFilter
     submissions?: SubmissionListRelationFilter
     snapshots?: WorkspaceSnapshotListRelationFilter
-  }, "id" | "username" | "userId">
+  }, "id" | "clerkId" | "username" | "userId">
 
   export type StudentProfileOrderByWithAggregationInput = {
     id?: SortOrder
+    clerkId?: SortOrderInput | SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     fullName?: SortOrder
-    age?: SortOrderInput | SortOrder
+    age?: SortOrder
     level?: SortOrder
     xp?: SortOrder
     streak?: SortOrder
@@ -15331,10 +15349,11 @@ export namespace Prisma {
     OR?: StudentProfileScalarWhereWithAggregatesInput[]
     NOT?: StudentProfileScalarWhereWithAggregatesInput | StudentProfileScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"StudentProfile"> | string
+    clerkId?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     username?: StringWithAggregatesFilter<"StudentProfile"> | string
     passwordHash?: StringWithAggregatesFilter<"StudentProfile"> | string
     fullName?: StringWithAggregatesFilter<"StudentProfile"> | string
-    age?: IntNullableWithAggregatesFilter<"StudentProfile"> | number | null
+    age?: IntWithAggregatesFilter<"StudentProfile"> | number
     level?: IntWithAggregatesFilter<"StudentProfile"> | number
     xp?: IntWithAggregatesFilter<"StudentProfile"> | number
     streak?: IntWithAggregatesFilter<"StudentProfile"> | number
@@ -16048,10 +16067,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -16069,10 +16089,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -16090,10 +16111,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -16111,10 +16133,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -16132,10 +16155,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateManyInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -16148,10 +16172,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -16162,10 +16187,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -16980,17 +17006,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -17060,6 +17075,7 @@ export namespace Prisma {
 
   export type StudentProfileCountOrderByAggregateInput = {
     id?: SortOrder
+    clerkId?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     fullName?: SortOrder
@@ -17083,6 +17099,7 @@ export namespace Prisma {
 
   export type StudentProfileMaxOrderByAggregateInput = {
     id?: SortOrder
+    clerkId?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     fullName?: SortOrder
@@ -17099,6 +17116,7 @@ export namespace Prisma {
 
   export type StudentProfileMinOrderByAggregateInput = {
     id?: SortOrder
+    clerkId?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     fullName?: SortOrder
@@ -17118,22 +17136,6 @@ export namespace Prisma {
     level?: SortOrder
     xp?: SortOrder
     streak?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -17871,14 +17873,6 @@ export namespace Prisma {
     connectOrCreate?: WorkspaceSnapshotCreateOrConnectWithoutStudentInput | WorkspaceSnapshotCreateOrConnectWithoutStudentInput[]
     createMany?: WorkspaceSnapshotCreateManyStudentInputEnvelope
     connect?: WorkspaceSnapshotWhereUniqueInput | WorkspaceSnapshotWhereUniqueInput[]
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -18696,33 +18690,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -18842,10 +18809,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateWithoutTeacherInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -18862,10 +18830,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateWithoutTeacherInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -18892,10 +18861,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateWithoutUserInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -18912,10 +18882,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateWithoutUserInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -18988,10 +18959,11 @@ export namespace Prisma {
     OR?: StudentProfileScalarWhereInput[]
     NOT?: StudentProfileScalarWhereInput | StudentProfileScalarWhereInput[]
     id?: StringFilter<"StudentProfile"> | string
+    clerkId?: StringNullableFilter<"StudentProfile"> | string | null
     username?: StringFilter<"StudentProfile"> | string
     passwordHash?: StringFilter<"StudentProfile"> | string
     fullName?: StringFilter<"StudentProfile"> | string
-    age?: IntNullableFilter<"StudentProfile"> | number | null
+    age?: IntFilter<"StudentProfile"> | number
     level?: IntFilter<"StudentProfile"> | number
     xp?: IntFilter<"StudentProfile"> | number
     streak?: IntFilter<"StudentProfile"> | number
@@ -19015,10 +18987,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -19035,10 +19008,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -19633,10 +19607,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateWithoutClassroomsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -19653,10 +19628,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateWithoutClassroomsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20215,10 +20191,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateWithoutSnapshotsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20235,10 +20212,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateWithoutSnapshotsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20306,10 +20284,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateWithoutSnapshotsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20326,10 +20305,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateWithoutSnapshotsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20346,10 +20326,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateWithoutProgressInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20366,10 +20347,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateWithoutProgressInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20431,10 +20413,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateWithoutProgressInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20451,10 +20434,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateWithoutProgressInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20506,10 +20490,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateWithoutAchievementsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20526,10 +20511,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateWithoutAchievementsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20562,10 +20548,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateWithoutAchievementsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20582,10 +20569,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateWithoutAchievementsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20602,10 +20590,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateWithoutSubmissionsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20622,10 +20611,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedCreateWithoutSubmissionsInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20687,10 +20677,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateWithoutSubmissionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20707,10 +20698,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateWithoutSubmissionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20762,10 +20754,11 @@ export namespace Prisma {
 
   export type StudentProfileCreateManyTeacherInput = {
     id?: string
+    clerkId?: string | null
     username: string
     passwordHash: string
     fullName: string
-    age?: number | null
+    age?: number
     level?: number
     xp?: number
     streak?: number
@@ -20787,10 +20780,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateWithoutTeacherInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20807,10 +20801,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateWithoutTeacherInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -20827,10 +20822,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateManyWithoutTeacherInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -21115,10 +21111,11 @@ export namespace Prisma {
 
   export type StudentProfileUpdateWithoutClassroomsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -21135,10 +21132,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateWithoutClassroomsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
@@ -21155,10 +21153,11 @@ export namespace Prisma {
 
   export type StudentProfileUncheckedUpdateManyWithoutClassroomsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    clerkId?: NullableStringFieldUpdateOperationsInput | string | null
     username?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    age?: NullableIntFieldUpdateOperationsInput | number | null
+    age?: IntFieldUpdateOperationsInput | number
     level?: IntFieldUpdateOperationsInput | number
     xp?: IntFieldUpdateOperationsInput | number
     streak?: IntFieldUpdateOperationsInput | number
